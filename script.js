@@ -1,15 +1,46 @@
 const inputBtn= document.getElementById("searchBtn")
+const movieModal= document.getElementById("movie-modal")
+const modalcontainer=document.getElementById("modal-content")
 
 inputBtn.addEventListener("click",searching)
 function searching(){
     const userInput= document.getElementById("searchInput").value
     const movieContainer= document.getElementById("movie-container")
-    fetching(userInput,movieContainer)
-   
-   
-        
+    const filterData= document.getElementById("filter").value
+    fetching(userInput,movieContainer,filterData)
 }
-async function fetching(userInput,movieContainer){
+
+async function movieDetails(imdbID){
+    console.log(imdbID)
+    
+
+    try{
+        const response= await fetch(`http://www.omdbapi.com/?i=${imdbID}&apikey=c285b61e`)
+        const data=await response.json()
+        if (data["Response"]=="True"){
+            modalcontainer.innerHTML=""
+            modalcontainer.innerHTML+=`
+                <button id="closeBtn">X</button>
+                <img src="${data.Poster}"/>
+                <h1>${data["Title"]}</h1>
+                <h3>${data["Actors"]}</h3>
+                <h5>${data["Genre"]}</h5>
+                <p>${data["Plot"]}</p>
+                <p>${data["imdbRating"]}</p>
+            `
+            console.log(movieModal)
+           movieModal.style.display="flex"
+           const closeBtn=document.getElementById("closeBtn")
+           closeBtn.addEventListener("click",()=>{
+                movieModal.style.display="none";
+            })
+        }
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+async function fetching(userInput,movieContainer,filterData){
     try{
         const response = await fetch(`http://www.omdbapi.com/?s=${userInput}&apikey=c285b61e`)
         const data = await response.json()
@@ -17,16 +48,30 @@ async function fetching(userInput,movieContainer){
         if (data["Response"]=="True"){
             console.log(data)
             
-            data["Search"].map((x)=>{
-                const card=`
-                <div>
-                <img src="${x["Poster"]}">
-                <h3>${x.Title}</h3>
-                <p>${x.Year}</p>
-                </div>
-                `
-            movieContainer.innerHTML+=card
+            let moviesdata= data["Search"]
+
+            let movies=moviesdata.sort((a,b)=>Number(a["Year"])-Number(b["Year"]))
+            movieContainer.innerHTML=""
+            let filteredMovies=movies
+            if (filterData=="movie" || filterData=="series"){
+                filteredMovies=filteredMovies.filter((x)=>x["Type"]==filterData)
+            }
+            filteredMovies.forEach((x)=>{
+                
+                    const card=`
+                            <div class="movie-card" onclick="movieDetails('${x.imdbID}')">
+                            <img src="${x["Poster"]}">
+                            <h3>${x.Title}</h3>
+                            <p>${x.Year}</p>
+                            </div>
+                        `
+                    movieContainer.innerHTML+=card
+                    
+            
+               
             })
+
+    
         }else{
             return ("Movie Don't Exist.")
         }
