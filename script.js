@@ -1,7 +1,16 @@
 const inputBtn= document.getElementById("searchBtn")
 const movieModal= document.getElementById("movie-modal")
 const modalcontainer=document.getElementById("modal-content")
-
+const togglebtn =document.getElementById("togglebtn");
+togglebtn.addEventListener("click", function (){
+  if (document.body.className==="light"){
+    document.body.className="dark";
+    btn.innerText ="Switch to Light Mode";
+  } else{
+    document.body.className ="light";
+    btn.innerText ="Switch to Dark Mode"
+  }
+})
 inputBtn.addEventListener("click",searching)
 function searching(){
     const userInput= document.getElementById("searchInput").value
@@ -20,13 +29,17 @@ async function movieDetails(imdbID){
         if (data["Response"]=="True"){
             modalcontainer.innerHTML=""
             modalcontainer.innerHTML+=`
+                
+                <img src="${data.Poster}" />
+                <div> 
+                    <h1>${data["Title"]}</h1>
+                    <h3>${data["Actors"]}</h3>
+                    <h5>${data["Genre"]}</h5>
+                    <p>${data["Plot"]}</p>
+                    <p>${data["imdbRating"]}</p>
+                </div>
                 <button id="closeBtn">X</button>
-                <img src="${data.Poster}"/>
-                <h1>${data["Title"]}</h1>
-                <h3>${data["Actors"]}</h3>
-                <h5>${data["Genre"]}</h5>
-                <p>${data["Plot"]}</p>
-                <p>${data["imdbRating"]}</p>
+               
             `
             console.log(movieModal)
            movieModal.style.display="flex"
@@ -57,15 +70,16 @@ async function fetching(userInput,movieContainer,filterData){
                 filteredMovies=filteredMovies.filter((x)=>x["Type"]==filterData)
             }
             filteredMovies.forEach((x)=>{
-                
-                    const card=`
+                    if (x["Poster"]!=='N/A'){const card=`
                             <div class="movie-card" onclick="movieDetails('${x.imdbID}')">
                             <img src="${x["Poster"]}">
                             <h3>${x.Title}</h3>
                             <p>${x.Year}</p>
                             </div>
                         `
-                    movieContainer.innerHTML+=card
+                    movieContainer.innerHTML+=card}
+                
+                    
                     
             
                
@@ -85,4 +99,4 @@ async function fetching(userInput,movieContainer,filterData){
 
 
 
-// OMDb API: http://www.omdbapi.com/?i=tt3896198&apikey=c285b61e
+// OMDb API: http://www.omdbapi.com/?s=tt3896198&apikey=c285b61e
