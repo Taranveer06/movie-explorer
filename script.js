@@ -2,24 +2,11 @@ const inputBtn= document.getElementById("searchBtn")
 const movieModal= document.getElementById("movie-modal")
 const modalcontainer=document.getElementById("modal-content")
 const togglebtn =document.getElementById("togglebtn");
-const watchlist=document.getElementById("watchlist");
-const watchlistModal = document.getElementById("watchlist-modal")
-const watchlistContent = document.getElementById("watchlist-content")
 
-
-
-watchlist.addEventListener("click",moviesToWatch)
-function moviesToWatch(){
-        watchlistModal.style.display="flex"
-        watchlistContent.innerHTML+=`<button id="closeBtn1">X</button>`
-        const closeBtn1=document.getElementById("closeBtn1")
-        closeBtn1.addEventListener("click",()=>{
-             watchlistModal.style.display="none";
-         })
+const watchlist=[];
+function addToWatchlist(imdbID,poster,title,year){
+    watchlist.push({imdbID,poster,title,year})
 }
-
-
-
 
 ////Toggle-theme
 togglebtn.addEventListener("click", function (){
@@ -42,24 +29,6 @@ function searching(){
     fetching(userInput,movieContainer,filterData)
 }
 
-async function addToWatchlist(imdbID){
-    console.log("added")
-    try{
-        const response= await fetch(`http://www.omdbapi.com/?i=${imdbID}&apikey=c285b61e`)
-        const data=await response.json()        
-        const card=`
-                <div class="movie-card" onclick="movieDetails('${data.imdbID}')">
-                <img src="${data["Poster"]}">
-                <h3>${data.Title}</h3>
-                <p>${data.Year}</p>
-                </div>
-              `
-                
-            watchlistContent.innerHTML+=card}
-    catch(err){
-        console.log(err)
-    }
-}
 
 ////Clicked movie full detail
 async function movieDetails(imdbID){
@@ -78,7 +47,7 @@ async function movieDetails(imdbID){
                     <h5>${data["Genre"]}</h5>
                     <p>${data["Plot"]}</p>
                     <p>${data["imdbRating"]}</p>
-                    <button onclick="addToWatchlist('${data.imdbID}')"> Add to watchlist</button>
+                    <button onclick="addToWatchlist('${data.imdbID}','${data.poster}','${data.title}','${data.year}')"> Add to watchlist</button>
                 </div>
                 <button id="closeBtn">X</button>
                
