@@ -2,10 +2,40 @@ const inputBtn= document.getElementById("searchBtn")
 const movieModal= document.getElementById("movie-modal")
 const modalcontainer=document.getElementById("modal-content")
 const togglebtn =document.getElementById("togglebtn");
+const watchlistbtn=document.getElementById("watchlist");
+const watchlistModal= document.getElementById("watchlist-modal")
+const watchlistContent= document.getElementById("watchlist-content")
+watchlistbtn.addEventListener("click",moviesToWatch)
+function moviesToWatch(){
+    console.log(watchlist)
+    const watchlistCloseBtn= document.getElementById("watchlist-closebtn")
+    watchlistCloseBtn.addEventListener("click",closingwatchlist=>{
+        watchlistModal.style.display="none"
+    })
+    watchlist.forEach((x)=>{
+        const watchlistcard=`
+                            <div class="movie-card" onclick="movieDetails('${x.imdbID}')">
+                            <img src="${x["poster"]}">
+                            <h3>${x.title}</h3>
+                            <p>${x.year}</p>
+                            <button onclick="removingMovie(${x.imdbID})">Remove</button>
+                            </div>
+                        `
+                    watchlistContent.innerHTML+=watchlistcard
+                }
+    )
+    watchlistModal.style.display="flex"
 
+}
 const watchlist=[];
 function addToWatchlist(imdbID,poster,title,year){
+    const exist = watchlist.filter((x)=>x.imdbID==imdbID)
+    if (exist.length!==0){
+        alert("This movie already exist")
+        return 
+    }
     watchlist.push({imdbID,poster,title,year})
+
 }
 
 ////Toggle-theme
@@ -47,9 +77,9 @@ async function movieDetails(imdbID){
                     <h5>${data["Genre"]}</h5>
                     <p>${data["Plot"]}</p>
                     <p>${data["imdbRating"]}</p>
-                    <button onclick="addToWatchlist('${data.imdbID}','${data.poster}','${data.title}','${data.year}')"> Add to watchlist</button>
+                    <button onclick="addToWatchlist('${data.imdbID}','${data.Poster}','${data.Title}','${data.Year}')"> Add to watchlist</button>
                 </div>
-                <button id="closeBtn">X</button>
+                <button id="closeBtn" background-color="red">X</button>
                
             `
             console.log(movieModal)
@@ -69,6 +99,8 @@ async function movieDetails(imdbID){
 
 ////fetching data
 async function fetching(userInput,movieContainer,filterData){
+    movieContainer.innerHTML=""
+    movieContainer.innerHTML+=`<h1>Loading....</h1>`
     try{
         const response = await fetch(`http://www.omdbapi.com/?s=${userInput}&apikey=c285b61e`)
         const data = await response.json()

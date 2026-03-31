@@ -124,7 +124,7 @@ h1{
 #watchlist-content{
     margin:  auto;
     padding: 20px;
-    
+    position: absolute;
     background: white;
     border-radius: 10px;
     position: relative;
@@ -134,4 +134,9 @@ h1{
     align-items: flex-start;
 
 
+}
+#watchlist-closebtn{
+    border-radius: 50%;
+    background-color: red;
+    position: relative;
 }
