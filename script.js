@@ -4,21 +4,36 @@ const modalcontainer=document.getElementById("modal-content")
 const togglebtn =document.getElementById("togglebtn");
 const watchlistbtn=document.getElementById("watchlist");
 const watchlistModal= document.getElementById("watchlist-modal")
-const watchlistContent= document.getElementById("watchlist-content")
-watchlistbtn.addEventListener("click",moviesToWatch)
-function moviesToWatch(){
-    console.log(watchlist)
-    const watchlistCloseBtn= document.getElementById("watchlist-closebtn")
-    watchlistCloseBtn.addEventListener("click",closingwatchlist=>{
+const watchlistContent= document.getElementById("watchlist-content");
+const watchlistCloseBtn= document.getElementById("watchlist-closebtn");
+watchlistCloseBtn.addEventListener("click",()=>{
         watchlistModal.style.display="none"
     })
+let watchlist=[];
+function removingMovie(imdbID){
+    watchlist =watchlist.filter(x=>x.imdbID!=imdbID)
+    moviesToWatch()
+
+
+}
+
+watchlistbtn.addEventListener("click",moviesToWatch)
+function moviesToWatch(){
+    watchlistContent.innerHTML=""
+    console.log(watchlist)
+
+
+    if (watchlist.length==0){
+        watchlistContent.innerHTML="<h3>No movies in Watchlist.</h3>"
+    }
     watchlist.forEach((x)=>{
+
         const watchlistcard=`
                             <div class="movie-card" onclick="movieDetails('${x.imdbID}')">
                             <img src="${x["poster"]}">
                             <h3>${x.title}</h3>
                             <p>${x.year}</p>
-                            <button onclick="removingMovie(${x.imdbID})">Remove</button>
+                            <button onclick="event.stopPropagation(); removingMovie('${x.imdbID}')">Remove</button>
                             </div>
                         `
                     watchlistContent.innerHTML+=watchlistcard
@@ -27,7 +42,7 @@ function moviesToWatch(){
     watchlistModal.style.display="flex"
 
 }
-const watchlist=[];
+
 function addToWatchlist(imdbID,poster,title,year){
     const exist = watchlist.filter((x)=>x.imdbID==imdbID)
     if (exist.length!==0){
