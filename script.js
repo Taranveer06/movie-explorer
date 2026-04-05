@@ -6,12 +6,19 @@ const watchlistbtn=document.getElementById("watchlist");
 const watchlistModal= document.getElementById("watchlist-modal")
 const watchlistContent= document.getElementById("watchlist-content");
 const watchlistCloseBtn= document.getElementById("watchlist-closebtn");
+const action= document.getElementById("action")
+const stars=document.getElementById("stars")
+const firstPage=document.getElementById("firstPage")
 watchlistCloseBtn.addEventListener("click",()=>{
         watchlistModal.style.display="none"
     })
-let watchlist=[];
+let watchlist=JSON.parse(localStorage.getItem("watchlist"))||[];
+function saveToLocalStorage(){
+    localStorage.setItem("watchlist",JSON.stringify(watchlist))
+}
 function removingMovie(imdbID){
     watchlist =watchlist.filter(x=>x.imdbID!=imdbID)
+    saveToLocalStorage()
     moviesToWatch()
 
 
@@ -50,7 +57,7 @@ function addToWatchlist(imdbID,poster,title,year){
         return 
     }
     watchlist.push({imdbID,poster,title,year})
-
+    saveToLocalStorage()
 }
 
 ////Toggle-theme
@@ -68,6 +75,7 @@ togglebtn.addEventListener("click", function (){
 /////searching
 inputBtn.addEventListener("click",searching)
 function searching(){
+    firstPage.style.display="none"
     const userInput= document.getElementById("searchInput").value
     const movieContainer= document.getElementById("movie-container")
     const filterData= document.getElementById("filter").value
@@ -120,6 +128,7 @@ async function fetching(userInput,movieContainer,filterData){
         const response = await fetch(`http://www.omdbapi.com/?s=${userInput}&apikey=c285b61e`)
         const data = await response.json()
         movieContainer.innerHTML=""
+        movieContainer.style.display="flex"
         if (data["Response"]=="True"){
             console.log(data)
             let moviesdata= data["Search"]
@@ -150,7 +159,64 @@ async function fetching(userInput,movieContainer,filterData){
         console.log(err)
     }
 }
+async function homePage(){
+    try{
+        const response= await fetch(`http://www.omdbapi.com/?s=batman&apikey=c285b61e`)
+        const data=await response.json()
+        console.log(data)
+        action.innerHTML=""
+        if (data["Response"]=="True"){
+            console.log(data)
+            let moviesdata= data["Search"]
+            let movies=moviesdata.sort((a,b)=>Number(a["Year"])-Number(b["Year"]))
+            let filteredMovies=movies
+            
+            if (filteredMovies.length==0){
+                const card=`<h1>This not exist</h1>`
+                action.innerHTML=card
+            }
+            filteredMovies.forEach((x)=>{
+                    if (x["Poster"]!=='N/A'){const card=`
+                            <div class="movie-card" onclick="movieDetails('${x.imdbID}')">
+                            <img src="${x["Poster"]}">
+                            <h3>${x.Title}</h3>
+                            <p>${x.Year}</p>
+                            </div>
+                        `
+                    action.innerHTML+=card}
+            })
+    }   const response1= await fetch(`http://www.omdbapi.com/?s=stars&apikey=c285b61e`)
+        const data1=await response1.json()
+        console.log(data1)
+        stars.innerHTML=""
+        if (data1["Response"]=="True"){
+            console.log(data1)
+            let moviesdata1= data1["Search"]
+            let movies=moviesdata1.sort((a,b)=>Number(a["Year"])-Number(b["Year"]))
+            let filteredMovies=movies
+            
+            if (filteredMovies.length==0){
+                const card=`<h1>This not exist</h1>`
+                stars.innerHTML=card
+            }
+            filteredMovies.forEach((x)=>{
+                    if (x["Poster"]!=='N/A'){const card=`
+                            <div class="movie-card" onclick="movieDetails('${x.imdbID}')">
+                            <img src="${x["Poster"]}">
+                            <h3>${x.Title}</h3>
+                            <p>${x.Year}</p>
+                            </div>
+                        `
+                    stars.innerHTML+=card}
+            })
+        }else{
+            stars.innerHTML="Movie don't exist."
+         
+        }}
+    catch(err){
+        console.log(err)
+    }
+}
 
-
-
+homePage()
 // OMDb API: http://www.omdbapi.com/?s=tt3896198&apikey=c285b61e

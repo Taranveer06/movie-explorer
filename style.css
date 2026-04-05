@@ -38,10 +38,35 @@ h1{
     transition: all 0.3s ease;
 }
 #movie-container{
-    display: flex;
+    display: none;
     flex-wrap: wrap;
     gap: 15px;
     justify-content: center;
+    z-index: 9997;
+}
+#action{
+    display: flex;
+    overflow-x: auto;
+    z-index: 299;
+    gap: 15px;
+
+   
+}
+#comedy{
+    display: flex;
+    overflow-x: auto;
+    z-index: 299;
+    gap: 15px;
+
+   
+}
+#stars{
+    display: flex;
+    overflow-x: auto;
+    z-index: 299;
+    gap: 15px;
+
+   
 }
 .movie-card{
     padding: 10px;
