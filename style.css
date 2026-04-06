@@ -4,6 +4,23 @@ body.light{
 body.dark{
     background-color: black;
 }
+#hero{
+    height: 80vh;
+    background:linear-gradient(to top,black,transparent), 
+            url('https://images.unsplash.com/photo-1524985069026-dd778a71c7b4') ;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: white;
+    padding-left: 50px;
+    display: flex;
+    align-items: center;
+
+}
+.hero-content h3{
+    font-size: 3rem;
+}
+
 h1{
     text-align: center;
     color: brown;
@@ -44,7 +61,7 @@ h1{
     justify-content: center;
     z-index: 9997;
 }
-#action{
+#action,#comedy, #stars{
     display: flex;
     overflow-x: auto;
     z-index: 299;
@@ -52,22 +69,8 @@ h1{
 
    
 }
-#comedy{
-    display: flex;
-    overflow-x: auto;
-    z-index: 299;
-    gap: 15px;
 
-   
-}
-#stars{
-    display: flex;
-    overflow-x: auto;
-    z-index: 299;
-    gap: 15px;
 
-   
-}
 .movie-card{
     padding: 10px;
     background-color: rgb(238, 196, 196);
@@ -168,3 +171,7 @@ h1{
     right: 10px;
     z-index: 100000;
 }
+
+
+
+
