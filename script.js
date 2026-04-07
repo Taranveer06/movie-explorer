@@ -201,7 +201,7 @@ async function homePage(){
             }
             filteredMovies.forEach((x)=>{
                     if (x["Poster"]!=='N/A'){const card=`
-                            <div class="movie-card" onclick="movieDetails('${x.imdbID}')">
+                            <div class="movie-card" onclick="movieDetails('${x.imdbID}')" onmouseenter="movieDetails('${x.imdbID}')">
                             <img src="${x["Poster"]}">
                             <h3>${x.Title}</h3>
                             <p>${x.Year}</p>
