@@ -9,9 +9,23 @@ const watchlistCloseBtn= document.getElementById("watchlist-closebtn");
 const action= document.getElementById("action")
 const stars=document.getElementById("stars")
 const firstPage=document.getElementById("firstPage")
+const homeBtn = document.getElementById("homeBtn");
+homeBtn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    document.getElementById("hero").style.display = "flex";
+    firstPage.style.display = "block";
+    document.getElementById("movie-container").style.display = "none";
+});
+
+
+
 watchlistCloseBtn.addEventListener("click",()=>{
         watchlistModal.style.display="none"
     })
+watchlistCloseBtn.onclick = () => {
+    watchlistModal.style.display = "none";
+};
 let watchlist=JSON.parse(localStorage.getItem("watchlist"))||[];
 function saveToLocalStorage(){
     localStorage.setItem("watchlist",JSON.stringify(watchlist))
@@ -20,8 +34,6 @@ function removingMovie(imdbID){
     watchlist =watchlist.filter(x=>x.imdbID!=imdbID)
     saveToLocalStorage()
     moviesToWatch()
-
-
 }
 
 watchlistbtn.addEventListener("click",moviesToWatch)
@@ -47,7 +59,6 @@ function moviesToWatch(){
                 }
     )
     watchlistModal.style.display="flex"
-
 }
 
 function addToWatchlist(imdbID,poster,title,year){
@@ -60,6 +71,10 @@ function addToWatchlist(imdbID,poster,title,year){
     saveToLocalStorage()
 }
 
+
+
+
+
 ////Toggle-theme
 togglebtn.addEventListener("click", function (){
   if (document.body.className==="light"){
@@ -70,6 +85,32 @@ togglebtn.addEventListener("click", function (){
     togglebtn.innerText ="Switch to Dark Mode"
   }
 })
+function updateWatchButton(imdbID){
+    const btn = document.getElementById("watchBtn");
+    const exists = watchlist.find(x => x.imdbID == imdbID);
+
+    if(exists){
+        btn.innerText = "Remove from Watchlist";
+        btn.style.background = "gray";
+    } else {
+        btn.innerText = "Add to Watchlist";
+        btn.style.background = "red";
+    }
+}
+
+function toggleWatchlist(imdbID,poster,title,year){
+    const exists = watchlist.find(x => x.imdbID == imdbID);
+
+    if(exists){
+        watchlist = watchlist.filter(x => x.imdbID != imdbID);
+    } else {
+        watchlist.push({imdbID,poster,title,year});
+    }
+
+    saveToLocalStorage();
+    updateWatchButton(imdbID);
+}
+
 
 
 /////searching
@@ -79,8 +120,12 @@ function searching(){
     const userInput= document.getElementById("searchInput").value
     const movieContainer= document.getElementById("movie-container")
     const filterData= document.getElementById("filter").value
+    document.getElementById("hero").style.display = "none";
     fetching(userInput,movieContainer,filterData)
 }
+
+
+
 
 
 ////Clicked movie full detail
@@ -117,6 +162,9 @@ async function movieDetails(imdbID){
         console.log(err)
     }
 }
+
+
+
 
 
 
@@ -201,7 +249,7 @@ async function homePage(){
             }
             filteredMovies.forEach((x)=>{
                     if (x["Poster"]!=='N/A'){const card=`
-                            <div class="movie-card" onclick="movieDetails('${x.imdbID}')" onmouseenter="movieDetails('${x.imdbID}')">
+                            <div class="movie-card" onclick="movieDetails('${x.imdbID}')" >
                             <img src="${x["Poster"]}">
                             <h3>${x.Title}</h3>
                             <p>${x.Year}</p>
@@ -211,6 +259,33 @@ async function homePage(){
             })
         }else{
             stars.innerHTML="Movie don't exist."
+         
+        }const response2= await fetch(`http://www.omdbapi.com/?s=comedy&apikey=c285b61e`)
+        const data2=await response2.json()
+        console.log(data1)
+        comedy.innerHTML=""
+        if (data2["Response"]=="True"){
+            console.log(data2)
+            let moviesdata1= data2["Search"]
+            let movies=moviesdata1.sort((a,b)=>Number(a["Year"])-Number(b["Year"]))
+            let filteredMovies=movies
+            
+            if (filteredMovies.length==0){
+                const card=`<h1>This not exist</h1>`
+                comedy.innerHTML=card
+            }
+            filteredMovies.forEach((x)=>{
+                    if (x["Poster"]!=='N/A'){const card=`
+                            <div class="movie-card" onclick="movieDetails('${x.imdbID}')" >
+                            <img src="${x["Poster"]}">
+                            <h3>${x.Title}</h3>
+                            <p>${x.Year}</p>
+                            </div>
+                        `
+                    comedy.innerHTML+=card}
+            })
+        }else{
+            comedy.innerHTML="Movie don't exist."
          
         }}
     catch(err){
