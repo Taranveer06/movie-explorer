@@ -1,4 +1,5 @@
 ## Movie-Explorer
+Live Demo: https://movie-explorer2-sigma.vercel.app/
 
 The goal of this project is to build a web application called Movie Explorer that allows users to search for movies by name using the OMDb API. It displays important details such as movie poster, title, and release year. Users can also add movies to a watchlist and remove them after watching.
 
