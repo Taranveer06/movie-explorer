@@ -36,8 +36,9 @@ body.light #searchInput {
     background: white;
     color: black;
 }
-.home-btn{
+#homeBtn:hover{
     cursor: pointer;
+    color: #840c12;
 }
 #navbar{
     position: fixed;
@@ -59,7 +60,17 @@ body.light #searchInput {
     border: none;
     cursor: pointer;
 }
-
+#togglebtn:hover{
+    transform: scale(1.1);
+}
+#watchlist:hover{
+    transform: scale(1.1);
+}
+#filter:hover{
+    background-color: #ece9e9;
+    cursor: pointer;
+    transform: scale(1.1);
+}
 body.dark #navbar button {
     background: #e50914;
     color: white;
@@ -94,7 +105,7 @@ body.light #hero::after{
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgb(254, 251, 251), transparent);
+    background: linear-gradient(to top, rgb(253, 252, 252),transparent);
 }
 #hero{
     height: 80vh;
@@ -184,6 +195,7 @@ h1{
 #searchInput:hover{
     transform: scale(1.1);
     transition: all 0.3s ease;
+   
 }
 #searchBtn{
     padding: 10px;
@@ -239,7 +251,7 @@ h1{
     display: none;
 }
 .movie-card:hover{
-    transform: scale(1.2);
+    transform: scale(1.10);
     z-index: 10;
     
     box-shadow: 0 8px 16px rgba(7, 7, 7, 0.2);
